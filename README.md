@@ -58,7 +58,6 @@ Project Organization
 
 <p>To clone this repository, run:
     
-    ```bash
     git clone https://github.com/schan523/har_project.git
-    ```
+
 </p>
