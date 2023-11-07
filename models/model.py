@@ -10,7 +10,14 @@ class NeuralNetwork(nn.Module):
         super().__init__()
         model = models.resnet50(weights="IMAGENET1K_V1")
         num_features = model.fc.in_features
-        model.fc = nn.Linear(num_features, 15)
+        self.fc = nn.Sequential(
+            nn.Linear(num_features, 15)
+        )
+    
+    def forward(self, x):
+        x = self.fc(x)
+        return x
+
 
 
 
