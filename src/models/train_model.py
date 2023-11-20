@@ -3,10 +3,29 @@ from torch import nn
 from torchsummary import summary    
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
-from torchvision.models import regnet50
+from torchvision.models import resnet50
 from torch.utils.tensorboard import SummaryWriter
 from datetime import datetime
-from models.model import BaseClassifier
+from .model import BaseClassifier
+
+#pre-trained model adapted for our task
+class BaseClassifier(nn.Module):
+    def __init__(self):
+        super().__init__(self, n_classes)
+        model = models.resnet50(weights="IMAGENET1K_V1")
+        modules = list(model.children())[:-1] #deleting fully connected layer
+        self.resnet = nn.Sequential(*modules)
+
+        #freeze pre-trained layers
+        for param in self.resnet.parameters():
+            param.requires_grad = False
+
+        self.fc = nn.Linear(model.fc.in_features, n_classes)
+
+    def forward(self, x):
+        x = self.resnet(x)
+        logits = self.fc(x)
+        return logits
 
 def train(model, train_loader, optimizer, loss_fn):
     for i, data in enumerate(train_loader):
