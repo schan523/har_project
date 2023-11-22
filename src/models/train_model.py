@@ -2,13 +2,13 @@ import torch
 from torch import nn
 from torchsummary import summary    
 from torch.utils.data import DataLoader
-from torchvision import datasets, transforms
+from torchvision import datasets, transforms, models
 from torchvision.models import resnet50
 from torch.utils.tensorboard import SummaryWriter
 from datetime import datetime
 from data.make_dataset import ImageDataSet
 from sklearn.model_selection import train_test_split
-from .model import BaseClassifier
+from model import BaseClassifier
 
 #data preprocessing
 # Data augmentation for training set

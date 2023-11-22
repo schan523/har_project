@@ -5,6 +5,8 @@ from torchvision import datasets, transforms
 import torchvision.models as models
 
 #pre-trained model adapted for our task
+n_classes = 15
+
 class BaseClassifier(nn.Module):
     def __init__(self):
         super().__init__(self, n_classes)
