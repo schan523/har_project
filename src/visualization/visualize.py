@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 model_dir = os.path.join('models')
 sys.path.append(model_dir)
-from model_dir import BaseClassifier  # import classifier 
+from model_dir.model import BaseClassifier  # import classifier 
 
 # Performance setting
 def get_device():
@@ -35,16 +35,15 @@ def load_data():
 def plot_feature_maps(model, loader):
     model.eval()
     images, _ = next(iter(loader))
-    with torch.no_grad():
+    with torch.no_grad(): # Extract feature maps from 'forward' method
         feature_maps = model(images.to(get_device()), return_feature_maps=True)
 
     for fmap in feature_maps:
-        if fmap.dim() == 4:  # plot feature maps with 4 dimensions (CNN format)
+        if fmap.dim() == 4:  # Plot feature maps with 4 dimensions (CNN format)
             fmap = fmap.cpu().numpy()
             for i in range(min(5, fmap.shape[1])):  # Plots first 5 feature maps
                 plt.imshow(fmap[0][i], cmap='gray')
                 plt.show()
-
 
 #VISUAL 2: Filter Visualization
 def plot_filters(model):
@@ -76,7 +75,7 @@ def plot_confusion_matrix(model, loader, n_classes):
     plt.ylabel('True Labels')
     plt.show()
 
-#Visual 4: t-SNE feature representation
+#VISUAL 4: t-SNE feature representation
 def plot_tsne(model, loader, num_samples=500):
     model.eval()
     features = []
@@ -98,5 +97,7 @@ def plot_tsne(model, loader, num_samples=500):
     plt.colorbar()
     plt.show()
 
+def main():
+    writer = SummaryWriter('runs/human_action_recognition')
 
 
