@@ -18,7 +18,14 @@ class BaseClassifier(nn.Module):
 
         self.fc = nn.Linear(model.fc.in_features, n_classes)
 
-    def forward(self, x):
-        x = self.resnet(x)
-        logits = self.fc(x)
-        return logits
+    def forward(self, x, return_feature_maps=False):
+        if return_feature_maps:
+            feature_maps = []
+            for layer in self.resnet:
+                x = layer(x)
+                feature_maps.append(x)
+            return feature_maps
+        else:
+            x = self.resnet(x)
+            logits = self.fc(x)
+            return logits
