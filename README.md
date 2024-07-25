@@ -1,7 +1,9 @@
 Human Activity Recognition Task
 ==============================
 
-Training and deploying a CNN on a dataset of human activity images
+Training and deploying a CNN on a dataset of human activity images.
+
+All preprocessing, training, and predicting is done n the Jupyter notebook in the notebooks directory.
 
 Project Organization
 ------------
