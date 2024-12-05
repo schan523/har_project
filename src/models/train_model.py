@@ -8,6 +8,19 @@ from torch.utils.tensorboard import SummaryWriter
 from datetime import datetime
 from .model import BaseClassifier
 
+
+# Visual 1 for tensorboard
+def log_feature_maps_to_tensorboard(model, loader, writer, layer_index=0, global_step=0):
+    model.eval()
+    images, _ = next(iter(loader))
+    with torch.no_grad():
+        feature_maps = model(images.to(get_device()), return_feature_maps=True)[layer_index]
+
+    feature_maps = feature_maps.cpu().numpy()
+    for i in range(min(5, feature_maps.shape[1])):  # Log first 5 feature maps
+        writer.add_image(f"FeatureMap_Layer{layer_index}/Map{i}", feature_maps[0, i], global_step)
+
+
 #pre-trained model adapted for our task
 class BaseClassifier(nn.Module):
     def __init__(self):
@@ -78,6 +91,9 @@ for epoch in range(num_epochs):
         val_loss, val_accuracy = validate(model, val_loader, loss_fn)
         writer.add_scalar("Validation loss: ", val_loss, epoch)
         writer.add_scalar("Validation accuracy: ", val_accuracy, epoch)
+
+    if epoch % log_interval == 0:  # log_interval can be set as per your requirement
+        log_feature_maps_to_tensorboard(model, data_loader, writer, layer_index, epoch)
 
     writer.flush()
     epoch_number += 1
